@@ -1,28 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-        <meta charset="utf-8">
-        <title>Assignment 6 &laquo; Data Visualization Dashboard&raquo;</title>
-        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
-        <link rel="stylesheet" href="main.css"/>
-        <!--Feel free to add more CSS files as needed-->
-        <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
-    </head>
+    <meta charset="utf-8">
+    <title>Lab 6 &laquo; Data Visualization &raquo;</title>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+    <style type="text/css">
+        /* Custom style rules go here. We've included a few, but feel free to write your own! */
+        button:focus {
+            outline: 0 !important;
+        }
+        svg {
+            display: block;
+            margin: 0 auto;
+            font: 10px sans-serif;
+        }
+        .tooltip {
+            position: absolute;
+            font-size: 12px;
+            min-width: 100px;
+            padding: 10px;
+            width:  auto;
+            height: auto;
+            pointer-events: none;
+            background-color: white;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 5px;
+        }
+    </style>
+</head>
 <body>
-    <div class="header">
-        <h3>Assignment 6 &laquo; Data Visualization Dashboard &raquo;</h3>
-    </div>
-    <!--  We included a basic HTML structure for the 3 graphs here. Feel free to change this if you'd like  -->
-    <div class="row">
-        <div class="col-lg-6">
-            <div id="graph1"></div>
-            <div id="graph2"></div><br/>
+<div>
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <div class="page-header center">
+            <h1>Assignment 6 <small>&laquo; Data Visualization &raquo;</small></h1>
+            <hr>
+            <h3>Titles Per Genre</h3>
+            <button type="button" class="btn btn-info" onclick="setData(['Movie'])">Only Movies</button>
+            <button type="button" class="btn btn-info" onclick="setData(['TV Show'])">Only TV</button>
+            <button type="button" class="btn btn-info" onclick="setData(['Movie', 'TV Show'])">Both</button>
+            <div id="barplot"></div>
+            <hr>
+            <h3>Movie Runtime Per Year</h3>
+            <div id="scatterplot"></div>
+            <h3>Director/Actor pairs</h3>
+            <button type="button" class="btn btn-info" onclick="setData2(['Movie'])">Only Movies</button>
+            <button type="button" class="btn btn-info" onclick="setData2(['TV Show'])">Only TV</button>
+            <div id="barplot2"></div>
+            <h3>Written Questions</h3>
+            1. For question 1, I show how many titles list each genre found in the dataset. I provide the
+            option to filter so that only movie genres or TV genres show up, or both. It clearly shows
+            how many titles per genre there are.
+            <br>
+            For question 2, I provide a scatterplot of the average runtimes of movies over the years. Hovering
+            over a plotted point provides exact information about that point. This shows the general trend of
+            average runtime by release year.
+            <br>
+            For question 3, I show the top 40 director/actor pairs for movies or TV by number of movies
+            made together.
+            <br><br>
+            2. First, D3 allowed me to write general code for bar graphs that could change according to data,
+            and were created without me having to find out anything about the data beforehand. I could also
+            use this code to show graphs for other data without much work.
+            <br>Second, D3 allows me to quickly and easily change the parameters, filtering by movie or TV
+            show with the click of a button, and presenting the data in the same clean manner.
+            <br>Third, my scatterplot allows for tooltips showing up, to give exact data if wanted for
+            any one plotpoint, and it's infeasible to show all the labels due to how crowded the points are.
+            <br><br>3. First, if the data is not in an accessible format for a computer, it may be easier
+            to use another tool. The work it takes to load bad data into a csv could be more work
+            than simply choosing another tool.
+            <br>Second, if you don't need the more advanced features offered by D3, I feel that
+            simply using google sheets or excel to create a line graph would be more time efficient
+            than using D3 to create it.
+            <br>Third, if you need data visualization real time, I imagine that it would be inefficient
+            to constantly load the database in and render it again. I recall that excel's graph functionality
+            changes the graph as the source data in the spreadsheet is updated.
+            <br><br>4. People who have somewhat weak vision should still be okay since I refrained from
+            using light colors in my bar graph with a white background. I also don't have anything color-coded,
+            so no information is really hidden by color. <br>
+            If the user is blind, it would be
+            quite difficult for them to visualize the data even though there are captions and labels that
+            the reader could use. I could improve upon this by adding summaries of the data under the graphs
+            and providing the key points, like "the top 3 genres were... with ... entries respectively".
+            This would make it easier for blind people to get the main points of the data. I got this from
+            one of the readings and thought it was a good idea. Additionally, I could perhaps learn to add thin black
+            borders around the bars to make the contrast even better while still keeping aesthetics.
+            <br><br>5. I suppose that using all dark or black colored bars would make it easier for more people
+            to see, but I felt that it was ugly and tried to strike a balance between contrast and aesthetics.
+            To save time, I did not add a description/summary of key points of the data under each graph,
+            even though that does seem like a good idea to make it more accessible to blind people. That would probably
+            be the next thing I'd do if I were trying to improve accessibility. I suppose the 80/20 principle
+            that one of the readings mentioned is at play here for me. I could also try adding more informative captions.
         </div>
-        <div class="col-lg-6">
-            <div id="graph3"></div>
-        </div>
     </div>
-    <!--Feel free to add more JavaScript files as needed-->
-    <script type="text/javascript" src="main.js"></script>
+    <div class="col-md-2"></div>
+</div>
+<script type="text/javascript">
+    // Define margins for SVG
+    const margin = {top: 40, right: 100, bottom: 40, left: 200};
+    // Define the number of examples to display on the graph
+    const NUM_EXAMPLES = 20;
+</script>
+<script type="text/javascript" src="graph1.js"></script>
+<script type="text/javascript" src="graph2.js"></script>
+<script type="text/javascript" src="graph3.js"></script>
 </body>
 </html>
